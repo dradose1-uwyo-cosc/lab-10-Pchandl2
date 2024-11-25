@@ -1,9 +1,10 @@
-# Your Name Here
+# Peyton Chandler
 # UWYO COSC 1010
-# Submission Date
-# Lab XX
-# Lab Section: 
-# Sources, people worked with, help given to: 
+# 11/24/24
+# Lab 10
+# Lab Section: 11
+# Sources, people worked with, help given to: used chatGpt to debug what was wrong with my code, was getting return errors on line 27 that I couldnt figure out and didnt realize I hadnt made my last print statement an f statement which it also fixed
+# Chat-GPT (2024, November 22th) can you help me figure out why my code doesn't work? " copy and pasted code" https://chat.openai.com/
 # your
 # comments
 # here
@@ -16,8 +17,18 @@ from pathlib import Path
 def get_hash(to_hash):
     """You can use """
     return sha256(to_hash.encode('utf-8')).hexdigest().upper()
+def password_cracking():
+    rockyoupath = Path("rockyou.txt")
+    hashpath = Path("hash")
 
-
+    try:
+        storedhash = hashpath.read_text().strip()
+    except FileNotFoundError:
+        print ("error: 'hash' file cannot be found")
+        return
+    except Exception as e:
+        print(f"error reading hash file: {e}")
+        return
 
 # Files and Exceptions
 
@@ -29,7 +40,26 @@ def get_hash(to_hash):
 # - The file contains the plaintext version of the passwords. You will need to hash them to check against the password hash you are trying to crack.
 #   - You can use the provided `get_hash()` function to generate the hashes.
 #   - Be careful, as "hello" and "hello " would generate a different hash.
+    try:
+        passwords = rockyoupath.read_text().splitlines()
+    except FileNotFoundError:
+        print("errors: 'rockyou.txt' file not found")
+        return
+    except Exception as e:
+        print(f"error reading 'rockyou.txt: {e}")
+        return
+    else:
+        print("passwords loaded in from 'rockyou.txt'")
 
+    for password in passwords:
+        if get_hash(password) == storedhash:
+            print(f"password cracked, password is: {password}")
+            return
+
+print("password not found in 'rockyou.txt' ")
+
+if __name__ == "__main__":
+    password_cracking()
 # You will need to include a try-except-catch block in your code.
 # - The reading of files needs to occur in the try blocks.
 
